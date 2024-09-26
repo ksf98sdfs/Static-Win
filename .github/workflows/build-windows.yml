@@ -32,7 +32,6 @@ jobs:
         shell: cmd
         working-directory: ${{ github.workspace }}/build/${{ env.BUILD_TYPE }}
         run: |
-          dir
           Static-Test.exe
         
       - name: Upload artifact
