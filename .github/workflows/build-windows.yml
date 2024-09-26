@@ -1,0 +1,44 @@
+name: Build Windows
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+env:
+  Qt_minor_version: 5.15
+  Qt_patch_version: 5.15.15
+  openssl_location: C:\Program Files\OpenSSL
+  sevenzip_location: C:\Program Files\7-Zip
+  BUILD_TYPE: Release
+  
+jobs:
+  build:
+    runs-on: windows-2019
+    steps:
+      - uses: ilammy/msvc-dev-cmd@v1
+      - name: Install Ninja
+        shell: pwsh
+        run: |
+          choco install ninja
+          
+      - uses: actions/checkout@v4
+      - name: Build project
+        run: cmake -S . -B build -G "Ninja Multi-Config" && cmake --build build --config ${{ env.BUILD_TYPE }}
+
+      - name: Run project
+        shell: cmd
+        working-directory: ${{ github.workspace }}/build/${{ env.BUILD_TYPE }}
+        run: |
+          Static-Test.exe
+        
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Windows-artifact
+          path: build/${{ env.BUILD_TYPE }}
+          if-no-files-found: ignore
+          retention-days: 0
