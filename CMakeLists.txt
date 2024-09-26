@@ -1,6 +1,6 @@
 cmake_minimum_required( VERSION 3.30.3 )
 
-set( library_name Static-Text )
+set( library_name Static-Test )
 
 project( ${library_name} CXX )
 set( CMAKE_INCLUDE_CURRENT_DIR ON )
